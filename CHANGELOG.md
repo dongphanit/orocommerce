@@ -2,40 +2,6 @@ Please refer first to [UPGRADE.md](UPGRADE.md) for the most important items that
 
 The current file describes significant changes in the code that may affect the upgrade of your customizations.
 
-## 4.1.0 (2020-01-31)
-[Show detailed list of changes](incompatibilities-4-1.md)
-
-### Removed
-
-* `*.class` parameters for all entities were removed from the dependency injection container.
-The entity class names should be used directly, e.g. `'Oro\Bundle\EmailBundle\Entity\Email'`
-instead of `'%oro_email.email.entity.class%'` (in service definitions, datagrid config files, placeholders, etc.), and
-`\Oro\Bundle\EmailBundle\Entity\Email::class` instead of `$container->getParameter('oro_email.email.entity.class')`
-(in PHP code).
-
-#### Config component
-* The trait `Oro\Component\Cache\Layout\DataProviderCacheTrait` was removed as it added additional complexity
-  to cacheable layout data providers instead of simplify them.
-* The unneeded class `Oro\Component\Cache\Layout\DataProviderCacheCleaner` was removed.
-
-#### PricingBundle
-* The `getName()` method was removed from `Oro\Bundle\PricingBundle\SubtotalProcessor\Model\SubtotalProviderInterface`.
-  Use the `alias` attribute of the `oro_pricing.subtotal_provider` DIC tag instead.
-
-#### PromotionBundle
-* The handling of `priority` attribute for `oro_promotion.discount_context_converter`,
-  `oro_promotion.promotion_context_converter` and `oro_promotion.discount_strategy` DIC tags
-  was changed to correspond Symfony recommendations.
-  If you have services with these tags, change the sign of the priority value for them.
-  E.g. `{ name: oro_promotion.discount_context_converter, priority: 100 }` should be changed to
-  `{ name: oro_promotion.discount_context_converter, priority: -100 }`
-
-#### TaxBundle
-* The `getProcessingClassName()` method was removed from `Oro\Bundle\TaxBundle\Mapper\TaxMapperInterface`.
-  Use the `class` attribute of the `oro_tax.tax_mapper` DIC tag instead.
-* The `getName()` method was removed from `Oro\Bundle\TaxBundle\Provider\TaxProviderInterface`.
-  Use the `alias` attribute of the `oro_tax.tax_provider` DIC tag instead.
-
 ## 4.1.0-rc (2019-12-10)
 [Show detailed list of changes](incompatibilities-4-1-rc.md)
 
