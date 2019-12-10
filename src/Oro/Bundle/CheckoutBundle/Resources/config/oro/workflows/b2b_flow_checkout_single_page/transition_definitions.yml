@@ -31,11 +31,6 @@ workflows:
                         results:
                             data.billing_address_has_shipping: $.billing_address_has_shipping
 
-                    - '@assign_value':
-                        conditions:
-                            '@not_empty': $late_registration.email
-                        parameters: [$email, $late_registration.email]
-
                     - '@run_action_group':
                         action_group: b2b_flow_checkout_update_shipping_address
                         parameters_mapping:
@@ -438,3 +433,4 @@ workflows:
                             allow_manual_source_remove: $allow_manual_source_remove
                             remove_source: $remove_source
                             clear_source: $clear_source
+                            email: $email

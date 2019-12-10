@@ -129,7 +129,7 @@ class FrontendShoppingListProductsProviderTest extends \PHPUnit\Framework\TestCa
 
     public function testGetMatchedPrices()
     {
-        $shoppingList = $this->getEntity(ShoppingList::class, ['id' => 42]);
+        $shoppingList = new ShoppingList();
         $lineItems = [];
 
         $this->shoppingListLineItemsDataProvider->expects($this->once())
@@ -144,7 +144,7 @@ class FrontendShoppingListProductsProviderTest extends \PHPUnit\Framework\TestCa
             ->willReturn($expected);
 
         $result = $this->provider->getMatchedPrices([$shoppingList]);
-        $this->assertEquals([42 => $expected], $result);
+        $this->assertEquals($expected, $result);
     }
 
     /**

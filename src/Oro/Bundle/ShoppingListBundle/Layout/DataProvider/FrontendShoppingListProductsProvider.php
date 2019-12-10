@@ -98,10 +98,10 @@ class FrontendShoppingListProductsProvider
 
         $prices = [];
         foreach ($shoppingLists as $shoppingList) {
-            $prices[$shoppingList->getId()] = $this->getMatchedPrice($shoppingList);
+            $prices[] = $this->getMatchedPrice($shoppingList);
         }
 
-        return $prices;
+        return array_merge(...$prices);
     }
 
     /**
