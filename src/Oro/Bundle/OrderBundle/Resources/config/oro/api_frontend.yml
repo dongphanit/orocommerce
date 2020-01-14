@@ -29,8 +29,6 @@ api:
                             property_path: _
                         description: ~
                         amount: ~
-                    form_options:
-                        mapped: false
                 shippingTrackings:
                     data_type: array
                     max_results: -1
@@ -38,13 +36,9 @@ api:
                     fields:
                         method: ~
                         number: ~
-                    form_options:
-                        mapped: false
                 shippingCostAmount:
                     property_path: estimatedShippingCostAmount
                     depends_on: [overriddenShippingCostAmount]
-                    form_options:
-                        mapped: false
                 overriddenShippingCostAmount:
                     exclude: true
                 shippingMethod:
@@ -57,8 +51,6 @@ api:
                             data_type: string
                         label:
                             data_type: string
-                    form_options:
-                        mapped: false
                 # declare excluded field for "shippingMethod" entity property
                 # to be able to use "shippingMethod" property in "depends_on" option
                 _shippingMethod:
@@ -68,8 +60,6 @@ api:
                     exclude: true
                 paymentTerm:
                     property_path: payment_term_7c4f1e8e.label
-                    form_options:
-                        mapped: false
                 payment_term_7c4f1e8e:
                     exclude: true
                 paymentStatus:
@@ -81,8 +71,6 @@ api:
                             data_type: string
                         label:
                             data_type: string
-                    form_options:
-                        mapped: false
                 paymentMethod:
                     data_type: array
                     property_path: _
@@ -92,41 +80,14 @@ api:
                             data_type: string
                         label:
                             data_type: string
-                    form_options:
-                        mapped: false
-                currency:
-                    form_options:
-                        mapped: false
-                totalValue:
-                    form_options:
-                        mapped: false
-                subtotalValue:
-                    form_options:
-                        mapped: false
-                billingAddress:
-                    form_options:
-                        constraints:
-                            - NotBlank: ~
-                            - Oro\Bundle\AddressBundle\Validator\Constraints\NewAddress: ~
-                shippingAddress:
-                    form_options:
-                        constraints:
-                            - NotBlank: ~
-                            - Oro\Bundle\AddressBundle\Validator\Constraints\NewAddress: ~
             actions:
-                update: false
-                delete: false
+                create: true
+                update: true
+                delete: true
                 delete_list: false
 
         Oro\Bundle\OrderBundle\Entity\OrderLineItem:
             documentation_resource: '@OroOrderBundle/Resources/doc/api_frontend/order_line_item.md'
-            form_options:
-                constraints:
-                    - Oro\Bundle\ProductBundle\Validator\Constraints\ProductUnitExists:
-                          path: productUnit
-                          sell: true
-                    - Oro\Bundle\ProductBundle\Validator\Constraints\QuantityUnitPrecision:
-                          path: quantity
             fields:
                 fromExternalSource:
                     exclude: true
@@ -138,25 +99,10 @@ api:
                     property_path: value
                 shipUntil:
                     property_path: shipBy
-                freeFormProduct:
-                    form_options:
-                        mapped: false
-                productName:
-                    form_options:
-                        mapped: false
-                productUnitCode:
-                    form_options:
-                        mapped: false
             actions:
-                create:
-                    status_codes:
-                        201: false
-                        400: false
-                        403: Returned always
-                        409: false
-                        500: false
-                update: false
-                delete: false
+                create: true
+                update: true
+                delete: true
                 delete_list: false
 
         Oro\Bundle\OrderBundle\Entity\OrderAddress:
@@ -172,16 +118,9 @@ api:
                 fromExternalSource:
                     exclude: true
             actions:
-                get_list: false
-                create:
-                    status_codes:
-                        201: false
-                        400: false
-                        403: Returned always
-                        409: false
-                        500: false
-                update: false
-                delete: false
+                create: true
+                update: true
+                delete: true
                 delete_list: false
 
         Oro\Bundle\OrderBundle\Entity\OrderDiscount:
@@ -197,7 +136,7 @@ api:
             actions: false
 
         Oro\Bundle\ProductBundle\Api\Model\ProductSearch:
-            documentation_resource: '@OroOrderBundle/Resources/doc/api_frontend/product_search.md'
+            documentation_resource:  '@OroOrderBundle/Resources/doc/api_frontend/product_search.md'
             fields:
                 orderedAt:
                     data_type: datetime
