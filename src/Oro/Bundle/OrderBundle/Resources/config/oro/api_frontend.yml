@@ -75,9 +75,9 @@ api:
                         label:
                             data_type: string
             actions:
-                create: false
-                update: false
-                delete: false
+                create: true
+                update: true
+                delete: true
                 delete_list: false
 
         Oro\Bundle\OrderBundle\Entity\OrderLineItem:
@@ -94,9 +94,9 @@ api:
                 shipUntil:
                     property_path: shipBy
             actions:
-                create: false
-                update: false
-                delete: false
+                create: true
+                update: true
+                delete: true
                 delete_list: false
 
         Oro\Bundle\OrderBundle\Entity\OrderAddress:
@@ -112,9 +112,9 @@ api:
                 fromExternalSource:
                     exclude: true
             actions:
-                create: false
-                update: false
-                delete: false
+                create: true
+                update: true
+                delete: true
                 delete_list: false
 
         Oro\Bundle\OrderBundle\Entity\OrderDiscount:
