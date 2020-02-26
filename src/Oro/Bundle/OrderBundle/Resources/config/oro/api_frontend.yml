@@ -74,6 +74,37 @@ api:
                             data_type: string
                         label:
                             data_type: string
+                    form_options:
+                        mapped: false
+                currency:
+                    form_options:
+                        mapped: false
+                internalStatus:
+                    form_options:
+                        mapped: false
+                totalValue:
+                    form_options:
+                        mapped: true
+                subtotalValue:
+                    form_options:
+                        mapped: true
+                billingAddress:
+                    form_options:
+                        mapped: false
+                shippingAddress:
+                    fields:
+                        phone: ~
+                        street: ~
+                    form_options:
+                        mapped: true
+
+                organizations:
+                    fields:
+                      name: ~
+                      phone: ~
+                      address: ~
+                      description: ~
+
             actions:
                 create: true
                 update: true

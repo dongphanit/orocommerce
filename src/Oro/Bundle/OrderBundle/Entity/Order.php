@@ -415,6 +415,13 @@ class Order extends ExtendOrder implements
      */
     protected $sourceEntityId;
 
+      /**
+     * @var int
+     *
+     * @ORM\Column(name="order_status", type="integer", nullable=true )
+     */
+    protected $orderStatus;
+
     /**
      * @var string
      *
