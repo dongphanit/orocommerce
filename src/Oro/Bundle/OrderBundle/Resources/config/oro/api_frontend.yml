@@ -90,10 +90,10 @@ api:
                         mapped: false
                 totalValue:
                     form_options:
-                        mapped: true
+                        mapped: false
                 subtotalValue:
                     form_options:
-                        mapped: true
+                        mapped: false
                 billingAddress:
                     form_options:
                         mapped: false

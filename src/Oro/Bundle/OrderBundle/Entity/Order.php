@@ -255,7 +255,7 @@ class Order extends ExtendOrder implements
      *  }
      * )
      */
-    protected $subtotalValue;
+    public $subtotalValue;
 
     /**
      * @var float
@@ -322,7 +322,7 @@ class Order extends ExtendOrder implements
      *  }
      * )
      */
-    protected $totalValue;
+    public $totalValue;
 
     /**
      * @var float
@@ -418,7 +418,7 @@ class Order extends ExtendOrder implements
       /**
      * @var int
      *
-     * @ORM\Column(name="order_status", type="integer", nullable=true )
+     * @ORM\Column(name="order_status", type="integer", nullable=true, options={"default" : 1} )
      */
     protected $orderStatus;
 
@@ -651,6 +651,17 @@ class Order extends ExtendOrder implements
     }
 
     /**
+     * @return string
+     */
+    public function getOrderStatus()
+    {
+        if ($this->orderStatus == null){
+            $this->orderStatus = 1; 
+        }
+        return $this->orderStatus;
+    }
+
+    /**
      * Set customerNotes
      *
      * @param string $customerNotes
@@ -725,6 +736,23 @@ class Order extends ExtendOrder implements
     {
         return $this->baseSubtotalValue;
     }
+
+     /**
+     *  @return float
+     */
+    public function getSubtotalValue()
+    {
+        return $this->subtotalValue;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotalValue()
+    {
+        return $this->totalValue;
+    }
+
 
     /**
      * @param float $baseValue
