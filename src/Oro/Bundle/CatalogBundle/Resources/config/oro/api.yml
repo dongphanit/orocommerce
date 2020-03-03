@@ -27,6 +27,21 @@ api:
                     exclude: true
                 childCategories:
                     exclude: true
+                titles:
+                    fields:
+                        id: ~
+                        string: ~
+                        text: ~
+                shortDescriptions:
+                    fields:
+                        id: ~
+                        string: ~
+                        text: ~
+                descriptions:
+                    fields:
+                        id: ~
+                        string: ~
+                        text: ~
                 title:
                     data_type: localizedFallbackValue:titles
                 shortDescription:
