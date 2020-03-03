@@ -122,21 +122,13 @@ api:
                     exclude: true
                 status:
                     exclude: true
-                names:
-                    fields:
-                        id: ~
-                        string: ~
-                        text: ~
-                shortDescriptions:
-                    fields:
-                        id: ~
-                        string: ~
-                        text: ~
+
+                name:
+                    data_type: localizedFallbackValue:names
+                shortDescription:
+                    data_type: localizedFallbackValue:shortDescriptions
                 description:
-                    fields:
-                        id: ~
-                        string: ~
-                        text: ~
+                    data_type: localizedFallbackValue:descriptions
                 productType:
                     property_path: type
                 productFamily:
@@ -145,6 +137,11 @@ api:
                     data_type: object
                     property_path: _
                     depends_on: [ type, attributeFamily.id ]
+
+                images:
+                    fields:
+                        id: ~
+                        files: ~
                 variantAttributeNames:
                     property_path: variantFields
                 variantProducts:

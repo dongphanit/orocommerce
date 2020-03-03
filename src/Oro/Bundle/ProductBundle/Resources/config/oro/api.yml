@@ -59,6 +59,10 @@ api:
                         id: ~
                         string: ~
                         text: ~
+                images:
+                    fields:
+                        id: ~
+                        files: ~
             filters:
                 fields:
                     sku:
