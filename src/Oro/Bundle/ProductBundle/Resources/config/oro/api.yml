@@ -44,6 +44,21 @@ api:
                     exclude: true
                 denormalizedDefaultNameUppercase:
                     exclude: true
+                names:
+                    fields:
+                        id: ~
+                        string: ~
+                        text: ~
+                shortDescriptions:
+                    fields:
+                        id: ~
+                        string: ~
+                        text: ~
+                descriptions:
+                    fields:
+                        id: ~
+                        string: ~
+                        text: ~
             filters:
                 fields:
                     sku:
