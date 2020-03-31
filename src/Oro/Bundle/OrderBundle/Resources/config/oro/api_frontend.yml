@@ -3,6 +3,7 @@ api:
         Oro\Bundle\OrderBundle\Entity\Order:
             documentation_resource: '@OroOrderBundle/Resources/doc/api_frontend/order.md'
             fields:
+                skip_acl_for_root_entity: true
                 sourceEntityClass:
                     exclude: true
                 sourceEntityId:
@@ -84,10 +85,10 @@ api:
                         mapped: false
                 totalValue:
                     form_options:
-                        mapped: false
+                        mapped: true
                 subtotalValue:
                     form_options:
-                        mapped: false
+                        mapped: true
                 billingAddress:
                     form_options:
                         mapped: false
@@ -95,6 +96,11 @@ api:
                     fields:
                         phone: ~
                         street: ~
+                        firstName: ~
+                        lastName: ~
+                        city: ~
+                        label: ~
+
                     form_options:
                         mapped: true
 
