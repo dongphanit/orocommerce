@@ -9,6 +9,7 @@ api:
                     - Oro\Bundle\OrderBundle\Validator\Constraints\CustomerOrUserAddressGranted:
                           addressType: shipping
             fields:
+                skip_acl_for_root_entity: true
                 sourceEntityClass:
                     exclude: true
                 sourceEntityId:
@@ -90,10 +91,10 @@ api:
                         mapped: false
                 totalValue:
                     form_options:
-                        mapped: false
+                        mapped: true
                 subtotalValue:
                     form_options:
-                        mapped: false
+                        mapped: true
                 billingAddress:
                     form_options:
                         mapped: false
@@ -101,6 +102,11 @@ api:
                     fields:
                         phone: ~
                         street: ~
+                        firstName: ~
+                        lastName: ~
+                        city: ~
+                        label: ~
+
                     form_options:
                         mapped: true
 
