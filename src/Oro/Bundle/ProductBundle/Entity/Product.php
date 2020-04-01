@@ -214,7 +214,7 @@ class Product extends ExtendProduct implements
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @ConfigField(
      *      defaultValues={
      *          "dataaudit"={
@@ -223,9 +223,6 @@ class Product extends ExtendProduct implements
      *          "importexport"={
      *              "identity"=true,
      *              "order"=10
-     *          },
-     *          "attribute"={
-     *              "is_attribute"=true
      *          }
      *      }
      * )
