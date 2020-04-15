@@ -2,6 +2,8 @@ api:
     entities:
         Oro\Bundle\OrderBundle\Entity\Order:
             documentation_resource: '@OroOrderBundle/Resources/doc/api_frontend/order.md'
+            order_by:
+                    id: DESC
             fields:
                 skip_acl_for_root_entity: true
                 sourceEntityClass:
@@ -14,6 +16,7 @@ api:
                     exclude: true
                 lineItems:
                     max_results: -1
+               
                 discounts:
                     data_type: array
                     max_results: -1
@@ -79,7 +82,7 @@ api:
                         mapped: false
                 currency:
                     form_options:
-                        mapped: false
+                        mapped: true
                 internalStatus:
                     form_options:
                         mapped: false

@@ -661,6 +661,13 @@ class Order extends ExtendOrder implements
         return $this->orderStatus;
     }
 
+    public function setOrderStatus($orderStatus)
+    {
+        $this->orderStatus = $orderStatus;
+
+        return $this;
+    }
+
     /**
      * Set customerNotes
      *

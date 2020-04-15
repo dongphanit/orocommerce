@@ -116,7 +116,7 @@ api:
             fields:
                 skip_acl_for_root_entity: true
                 denormalizedDefaultName:
-                    exclude: true
+                    exclude: false
                 denormalizedDefaultNameUppercase:
                     exclude: true
                 skuUppercase:
@@ -125,7 +125,8 @@ api:
                     exclude: true
 
                 name:
-                    data_type: localizedFallbackValue:names
+                    property_path: denormalizedDefaultName
+                    # data_type: localizedFallbackValue:names
                 shortDescription:
                     data_type: localizedFallbackValue:shortDescriptions
                 description:
@@ -150,8 +151,10 @@ api:
                     target_class: Oro\Bundle\ProductBundle\Entity\Product
                     target_type: to-many
                     property_path: _
-                    max_results: -1
+                    max_results: -1 
                 unitPrecisions:
+                    fields:
+                        skip_acl_for_root_entity: true
                     data_type: array
                     property_path: _
                     depends_on:
@@ -164,6 +167,8 @@ api:
                 # declare excluded field for "unitPrecisions" entity property
                 # to be able to use "unitPrecisions" property in "depends_on" option
                 _unitPrecisions:
+                    fields:
+                        skip_acl_for_root_entity: true
                     property_path: unitPrecisions
                     exclude: true
                     max_results: -1
@@ -331,6 +336,12 @@ api:
                 delete_list: false
                 get_subresource: false
                 get_relationship: false
+
+        Oro\Bundle\ProductBundle\Entity\ProductUnitPrecision:
+            documentation_resource: '@OroProductBundle/Resources/doc/api/product-unit-precision.md'
+            fields:
+                skip_acl_for_root_entity: true
+                
 
         Oro\Bundle\ProductBundle\Api\Model\ProductCollection:
             documentation_resource: '@OroProductBundle/Resources/doc/api_frontend/product_collection.md'

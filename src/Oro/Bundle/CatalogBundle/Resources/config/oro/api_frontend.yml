@@ -82,6 +82,8 @@ api:
         Oro\Bundle\CatalogBundle\Entity\Category:
             documentation_resource: '@OroCatalogBundle/Resources/doc/api_frontend/category.md'
             fields:
+                skip_acl_for_root_entity: true
+                
                 denormalizedDefaultTitle:
                     exclude: true
                 materializedPath:
@@ -102,7 +104,8 @@ api:
                     exclude: true
                 
                 title:
-                    data_type: localizedFallbackValue:titles
+                    property_path: denormalizedDefaultTitle
+                    # data_type: localizedFallbackValue:titles
                 shortDescription:
                     data_type: localizedFallbackValue:shortDescriptions
                 description:
