@@ -7,6 +7,7 @@ use Oro\Bundle\AttachmentBundle\Manager\AttachmentManager;
 use Oro\Bundle\LayoutBundle\Provider\ImageTypeProvider;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
+use Oro\Bundle\AttachmentBundle\Manager\FileManager;
 
 /**
  * Computes a value of "types" and "files" field for Product Image entity.
@@ -15,6 +16,7 @@ class ComputeProductImageFields implements ProcessorInterface
 {
     private const TYPES_FIELD = 'types';
     private const FILES_FIELD  = 'files';
+    private const CONTENT_FIELD  = 'content';
 
     /** @var AttachmentManager */
     private $attachmentManager;
@@ -22,14 +24,26 @@ class ComputeProductImageFields implements ProcessorInterface
     /** @var ImageTypeProvider*/
     private $typeProvider;
 
+    /** @var FileManager */
+    private $fileManager;
+
     /**
      * @param AttachmentManager $attachmentManager
      * @param ImageTypeProvider $typeProvider
      */
-    public function __construct(AttachmentManager $attachmentManager, ImageTypeProvider $typeProvider)
+    public function __construct(AttachmentManager $attachmentManager, ImageTypeProvider $typeProvider, FileManager $fileManager)
     {
         $this->attachmentManager = $attachmentManager;
         $this->typeProvider = $typeProvider;
+        $this->fileManager = $fileManager;
+    }
+
+    function debug_to_console($data) {
+        $output = $data;
+        if (is_array($output))
+            $output = implode(',', $output);
+    
+        echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
     }
 
     /**
@@ -37,6 +51,7 @@ class ComputeProductImageFields implements ProcessorInterface
      */
     public function process(ContextInterface $context)
     {
+        
         /** @var CustomizeLoadedDataContext $context */
 
         $data = $context->getData();
@@ -66,6 +81,7 @@ class ComputeProductImageFields implements ProcessorInterface
         }
 
         $context->setData($data);
+        return;
     }
 
     /**
@@ -76,7 +92,7 @@ class ComputeProductImageFields implements ProcessorInterface
      */
     private function getImageUrls(int $imageId, string $filename, array $imageTypes): array
     {
-        if (empty($imageTypes)) {
+        if (empty($imageTypes) || empty($filename)) {
             return [];
         }
 

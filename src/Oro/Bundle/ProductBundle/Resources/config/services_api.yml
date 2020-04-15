@@ -138,6 +138,7 @@ services:
         arguments:
             - '@oro_attachment.manager'
             - '@oro_layout.provider.image_type'
+            - '@oro_attachment.file_manager'
         tags:
             - { name: oro.api.processor, action: customize_loaded_data, requestType: rest, collection: true, class: Oro\Bundle\ProductBundle\Entity\ProductImage }
 

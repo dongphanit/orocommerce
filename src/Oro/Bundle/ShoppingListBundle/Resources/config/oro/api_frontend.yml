@@ -7,9 +7,6 @@ api:
             alias: shoppinglistitem
             plural_alias: shoppinglistitems
         
-    
-        
-
     entities:
         Oro\Bundle\ShoppingListBundle\Entity\ShoppingList:
             documentation_resource: '@OroShoppingListBundle/Resources/doc/api_frontend/shopping_list.md'
