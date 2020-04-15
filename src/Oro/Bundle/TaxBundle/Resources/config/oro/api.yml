@@ -1,5 +1,18 @@
 api:
     entities:
+        Oro\Bundle\OrderBundle\Entity\Order:
+            documentation_resource: '@OroTaxBundle/Resources/doc/api_frontend/order.md'
+            fields:
+                totalIncludingTax:
+                    data_type: money
+                    property_path: _
+                totalExcludingTax:
+                    data_type: money
+                    property_path: _
+                totalTaxAmount:
+                    data_type: money
+                    property_path: _
+
         Oro\Bundle\TaxBundle\Entity\ProductTaxCode:
             documentation_resource: '@OroTaxBundle/Resources/doc/api/product_tax_code.md'
             fields:
