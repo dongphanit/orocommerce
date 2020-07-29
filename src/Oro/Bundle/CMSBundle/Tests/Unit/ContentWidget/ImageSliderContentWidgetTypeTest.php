@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\CMSBundle\Tests\Unit\ContentWidget;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -79,19 +80,36 @@ class ImageSliderContentWidgetTypeTest extends FormIntegrationTestCase
         $contentWidget = new ContentWidget();
         $contentWidget->setName('test_name');
 
-        $data = [new ImageSlide()];
+        $slides = [new ImageSlide()];
 
         $this->repository->expects($this->any())
             ->method('findBy')
             ->with(['contentWidget' => $contentWidget], ['slideOrder' => 'ASC'])
-            ->willReturn($data);
+            ->willReturn($slides);
 
-        $this->assertSame(
-            ['pageComponentName' => 'test_name', 'imageSlides' => $data],
-            $this->contentWidgetType->getWidgetData($contentWidget)
+        $expectedData = [
+            'pageComponentName' => 'test_name',
+            'pageComponentOptions' => new ArrayCollection(
+                [
+                    'slidesToShow' => 1,
+                    'slidesToScroll' => 1,
+                    'autoplay' => true,
+                    'autoplaySpeed' => 4000,
+                    'arrows' => false,
+                    'dots' => true,
+                    'infinite' => false,
+                ]
+            ),
+            'imageSlides' => new ArrayCollection($slides),
+        ];
+
+        $this->assertEquals($expectedData, $this->contentWidgetType->getWidgetData($contentWidget));
+        $this->assertEquals(
+            array_merge($expectedData, ['pageComponentName' => 'test_name1']),
+            $this->contentWidgetType->getWidgetData(clone $contentWidget)
         );
-        $this->assertSame(
-            ['pageComponentName' => 'test_name1', 'imageSlides' => $data],
+        $this->assertEquals(
+            array_merge($expectedData, ['pageComponentName' => 'test_name2']),
             $this->contentWidgetType->getWidgetData($contentWidget)
         );
     }
@@ -128,29 +146,45 @@ class ImageSliderContentWidgetTypeTest extends FormIntegrationTestCase
         $contentWidget = new ContentWidget();
         $contentWidget->setName('test_name');
 
-        $data = [new ImageSlide()];
+        $slides = [new ImageSlide()];
 
         $this->repository->expects($this->any())
             ->method('findBy')
             ->with(['contentWidget' => $contentWidget], ['slideOrder' => 'ASC'])
-            ->willReturn($data);
+            ->willReturn($slides);
 
         $twig = $this->createMock(Environment::class);
         $twig->expects($this->exactly(2))
             ->method('render')
-            ->willReturnMap(
-                [
-                    [
-                        '@OroCMS/ImageSliderContentWidget/slider_options.html.twig',
-                        ['pageComponentName' => 'test_name', 'imageSlides' => $data],
-                        'rendered settings template'
-                    ],
-                    [
-                        '@OroCMS/ImageSliderContentWidget/image_slides.html.twig',
-                        ['pageComponentName' => 'test_name', 'imageSlides' => $data],
-                        'rendered slides template'
-                    ],
-                ]
+            ->willReturnCallback(
+                function ($name, array $context = []) use ($slides) {
+                    $this->assertEquals(
+                        [
+                            'pageComponentName' => 'test_name',
+                            'pageComponentOptions' => new ArrayCollection(
+                                [
+                                    'slidesToShow' => 1,
+                                    'slidesToScroll' => 1,
+                                    'autoplay' => true,
+                                    'autoplaySpeed' => 4000,
+                                    'arrows' => false,
+                                    'dots' => true,
+                                    'infinite' => false,
+                                ]
+                            ),
+                            'imageSlides' => new ArrayCollection($slides),
+                        ],
+                        $context
+                    );
+
+                    if ($name === '@OroCMS/ImageSliderContentWidget/slider_options.html.twig') {
+                        return 'rendered settings template';
+                    }
+
+                    if ($name === '@OroCMS/ImageSliderContentWidget/image_slides.html.twig') {
+                        return 'rendered slides template';
+                    }
+                }
             );
 
         $this->assertEquals(
@@ -216,29 +250,8 @@ class ImageSliderContentWidgetTypeTest extends FormIntegrationTestCase
     public function testGetDefaultTemplate(): void
     {
         $contentWidget = new ContentWidget();
-        $contentWidget->setName('test_name');
-        $contentWidget->setSettings(['param' => 'value']);
-
-        $slides = [new ImageSlide()];
-
-        $this->repository->expects($this->any())
-            ->method('findBy')
-            ->with(['contentWidget' => $contentWidget], ['slideOrder' => 'ASC'])
-            ->willReturn($slides);
-
         $twig = $this->createMock(Environment::class);
-        $twig->expects($this->once())
-            ->method('render')
-            ->with(
-                '@OroCMS/ImageSliderContentWidget/widget.html.twig',
-                [
-                    'param' => 'value',
-                    'pageComponentName' => 'test_name',
-                    'imageSlides' => $slides
-                ]
-            )
-            ->willReturn('rendered template');
 
-        $this->assertEquals('rendered template', $this->contentWidgetType->getDefaultTemplate($contentWidget, $twig));
+        $this->assertEquals('', $this->contentWidgetType->getDefaultTemplate($contentWidget, $twig));
     }
 }

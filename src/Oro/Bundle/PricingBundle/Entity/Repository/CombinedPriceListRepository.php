@@ -17,6 +17,7 @@ use Oro\Bundle\PricingBundle\Entity\CombinedPriceListToCustomerGroup;
 use Oro\Bundle\PricingBundle\Entity\CombinedPriceListToPriceList;
 use Oro\Bundle\PricingBundle\Entity\CombinedPriceListToWebsite;
 use Oro\Bundle\PricingBundle\Entity\PriceList;
+use Oro\Bundle\PricingBundle\Model\CombinedPriceListRelationHelper;
 use Oro\Bundle\WebsiteBundle\Entity\Website;
 
 /**
@@ -157,14 +158,7 @@ class CombinedPriceListRepository extends BasePriceListRepository
     {
         $selectQb = $this->createQueryBuilder('priceList')
             ->select('priceList.id');
-
-        $relations = [
-            'priceListToWebsite' => CombinedPriceListToWebsite::class,
-            'priceListToCustomerGroup' => CombinedPriceListToCustomerGroup::class,
-            'priceListToCustomer' => CombinedPriceListToCustomer::class,
-        ];
-
-        foreach ($relations as $alias => $entityName) {
+        foreach (CombinedPriceListRelationHelper::RELATIONS as $alias => $entityName) {
             $selectQb->leftJoin(
                 $entityName,
                 $alias,
@@ -273,12 +267,6 @@ class CombinedPriceListRepository extends BasePriceListRepository
      */
     public function hasOtherRelations(BaseCombinedPriceListRelation $exceptRelation)
     {
-        $relationsClasses = [
-            'customerCpl' => CombinedPriceListToCustomer::class,
-            'customerGroupCpl' => CombinedPriceListToCustomerGroup::class,
-            'websiteCpl' => CombinedPriceListToWebsite::class,
-        ];
-
         $mainQb = $this->createQueryBuilder('cpl');
         $mainQb->select('1')
             ->where('cpl = :cpl')
@@ -286,7 +274,7 @@ class CombinedPriceListRepository extends BasePriceListRepository
             ->setParameter('website', $exceptRelation->getWebsite());
 
         $expr = $mainQb->expr()->orX();
-        foreach ($relationsClasses as $alias => $class) {
+        foreach (CombinedPriceListRelationHelper::RELATIONS as $alias => $class) {
             $subQb = $this->getEntityManager()->createQueryBuilder();
             $subQb->select('1')
                 ->from($class, $alias)
@@ -359,6 +347,9 @@ class CombinedPriceListRepository extends BasePriceListRepository
     public function getCPLsForPriceCollectByTimeOffset($offsetHours)
     {
         $qb = $this->getCPLsForPriceCollectByTimeOffsetQueryBuilder($offsetHours);
+        // Return only not calculated CPLs withing offset hours
+        $qb->andWhere($qb->expr()->eq('cpl.pricesCalculated', ':pricesCalculated'))
+            ->setParameter('pricesCalculated', false);
 
         $iterator = new BufferedIdentityQueryResultIterator($qb);
         $iterator->setBufferSize(self::CPL_BATCH_SIZE);
@@ -396,17 +387,13 @@ class CombinedPriceListRepository extends BasePriceListRepository
                 Join::WITH,
                 $qb->expr()->eq('cpl', 'combinedPriceListActivationRule.combinedPriceList')
             )
-            ->where($qb->expr()->eq('cpl.pricesCalculated', ':pricesCalculated'))
-            ->andWhere(
+            ->where(
                 $qb->expr()->orX(
                     $qb->expr()->lt('combinedPriceListActivationRule.activateAt', ':activateData'),
                     $qb->expr()->isNull('combinedPriceListActivationRule.activateAt')
                 )
             )
-            ->setParameters([
-                'pricesCalculated' => false,
-                'activateData' => $activateDate
-            ]);
+            ->setParameter('activateData', $activateDate);
 
         return $qb;
     }

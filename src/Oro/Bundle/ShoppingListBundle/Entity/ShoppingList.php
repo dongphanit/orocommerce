@@ -10,7 +10,8 @@ use Oro\Bundle\CustomerBundle\Entity\Ownership\AuditableFrontendCustomerUserAwar
 use Oro\Bundle\EntityBundle\EntityProperty\DatesAwareTrait;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
-use Oro\Bundle\OrganizationBundle\Entity\OrganizationAwareInterface;
+// use Oro\Bundle\OrganizationBundle\Entity\OrganizationAwareInterface;
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\PricingBundle\SubtotalProcessor\Model\LineItemsNotPricedAwareInterface;
 use Oro\Bundle\PricingBundle\SubtotalProcessor\Model\Subtotal;
 use Oro\Bundle\ProductBundle\Model\ProductLineItemsHolderInterface;
@@ -57,8 +58,6 @@ use Oro\Component\Checkout\Entity\CheckoutSourceEntityInterface;
  *              "frontend_owner_type"="FRONTEND_USER",
  *              "frontend_owner_field_name"="customerUser",
  *              "frontend_owner_column_name"="customer_user_id",
- *              "organization_field_name"="organization",
- *              "organization_column_name"="organization_id"
  *          },
  *          "dataaudit"={
  *              "auditable"=true
@@ -74,7 +73,6 @@ use Oro\Component\Checkout\Entity\CheckoutSourceEntityInterface;
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ShoppingList extends ExtendShoppingList implements
-    OrganizationAwareInterface,
     LineItemsNotPricedAwareInterface,
     CustomerOwnerAwareInterface,
     CustomerVisitorOwnerAwareInterface,
@@ -139,6 +137,25 @@ class ShoppingList extends ExtendShoppingList implements
      */
     protected $website;
 
+    /**
+     * @var Organization
+     *
+     * @ORM\ManyToOne(
+     *      targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")
+     * @ORM\JoinColumn(name="organization_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          },
+     *          "importexport"={
+     *              "order"=40
+     *          }
+     *      }
+     * )
+     */
+    protected $organization;
+    
     /**
      * @var ArrayCollection|LineItem[]
      *
@@ -227,6 +244,26 @@ class ShoppingList extends ExtendShoppingList implements
     public function getLabel()
     {
         return $this->label;
+    }
+
+    
+    public function setOrganization(Organization $organization){
+        $this->organization = $organization;
+        return $this;
+    }
+
+    /**
+     * @return Organization
+     */
+    public function getOrganization(){
+        // $arr = array(
+        //         "id" => $this->organization->getId(),
+        //         "name" => $this->organization->getName()
+            
+        // );
+        // $json = json_encode($arr);
+        // return (string)$json;
+        return  $this->organization;
     }
 
     /**

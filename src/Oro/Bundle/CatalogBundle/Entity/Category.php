@@ -246,7 +246,7 @@ class Category extends ExtendCategory implements SluggableInterface, DatesAwareI
      *          "importexport"={
      *              "order"=60,
      *              "full"=true,
-     *              "fallback_field"="text"
+     *              "fallback_field"="wysiwyg"
      *          }
      *      }
      * )
@@ -292,10 +292,9 @@ class Category extends ExtendCategory implements SluggableInterface, DatesAwareI
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
-     *              "excluded"=true
+     *              "excluded"=false
      *          }
-     *      },
-     *      mode="hidden"
+     *      }
      * )
      */
     protected $denormalizedDefaultTitle;
@@ -713,4 +712,12 @@ class Category extends ExtendCategory implements SluggableInterface, DatesAwareI
     {
         return $this->denormalizedDefaultTitle;
     }
+
+    public function setDenormalizedDefaultTitle($denormalizedDefaultTitle)
+    {
+        $this->denormalizedDefaultTitle = $materializedPath;
+
+        return $this;
+    }
+
 }

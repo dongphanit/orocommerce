@@ -79,6 +79,23 @@ class ProductImage extends ExtendProductImage
      */
     protected $updatedAt;
 
+    // /**
+    //  * @var string
+    //  *
+    //  * @ORM\Column(name="image_content", type="string", length=64, nullable=false)
+    //  * @ConfigField(
+    //  *      defaultValues={
+    //  *          "dataaudit"={
+    //  *              "auditable"=true
+    //  *          },
+    //  *          "importexport"={
+    //  *              "order"=20
+    //  *          }
+    //  *      }
+    //  *  )
+    //  */
+    // protected $content;
+
     public function __construct()
     {
         parent::__construct();
@@ -117,6 +134,23 @@ class ProductImage extends ExtendProductImage
     {
         return $this->types;
     }
+
+    // /**
+    //  * @return String
+    //  */
+    // public function getContent()
+    // {
+    //     return $this->__toString();
+    // }
+
+    //  /**
+    //  * @return String
+    //  */
+    // public function setContent($content)
+    // {
+    //     $this->content= $content;
+    // }
+
 
     /**
      * @param $type

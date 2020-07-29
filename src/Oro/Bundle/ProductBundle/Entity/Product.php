@@ -214,6 +214,24 @@ class Product extends ExtendProduct implements
     /**
      * @var string
      *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={
+     *              "auditable"=true
+     *          },
+     *          "importexport"={
+     *              "identity"=true,
+     *              "order"=10
+     *          }
+     *      }
+     * )
+     */
+    protected $scanCode;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="status", type="string", length=16, nullable=false)
      * @ConfigField(
      *      defaultValues={
@@ -426,7 +444,7 @@ class Product extends ExtendProduct implements
      *          "importexport"={
      *              "order"=60,
      *              "full"=true,
-     *              "fallback_field"="text"
+     *              "fallback_field"="wysiwyg"
      *          },
      *          "attribute"={
      *              "is_attribute"=true
@@ -858,6 +876,27 @@ class Product extends ExtendProduct implements
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getScanCode()
+    {
+        return $this->scanCode;
+    }
+
+    /**
+     * @param string $scanCode
+     *
+     * @return Product
+     */
+    public function setScanCode($scanCode)
+    {
+        $this->scanCode = $scanCode;
+
+        return $this;
+    }
+
 
     /**
      * @return BusinessUnit

@@ -9,7 +9,7 @@ datagrids:
                 select:
                     - page.id
                 from:
-                    - { table: '%oro_cms.entity.page.class%', alias: page }
+                    - { table: 'Oro\Bundle\CMSBundle\Entity\Page', alias: page }
         columns:
             id:
                 label: oro.cms.page.id.label
@@ -48,7 +48,7 @@ datagrids:
                 select:
                     - loginPage.id
                 from:
-                    - { table: '%oro_cms.entity.loginpage.class%', alias: loginPage }
+                    - { table: 'Oro\Bundle\CMSBundle\Entity\LoginPage', alias: loginPage }
         columns:
             id:
               label: oro.cms.loginpage.id.label
@@ -78,7 +78,7 @@ datagrids:
                 select:
                     - page.id
                 from:
-                    - { table: '%oro_cms.entity.page.class%', alias: page }
+                    - { table: 'Oro\Bundle\CMSBundle\Entity\Page', alias: page }
         columns:
             id:
               label: oro.cms.page.id.label
@@ -130,7 +130,7 @@ datagrids:
                     - contentBlock.createdAt
                     - contentBlock.updatedAt
                 from:
-                    - { table: '%oro_cms.entity.content_block.class%', alias: contentBlock }
+                    - { table: 'Oro\Bundle\CMSBundle\Entity\ContentBlock', alias: contentBlock }
         columns:
             alias:
                 label: oro.cms.contentblock.alias.label
@@ -321,7 +321,7 @@ datagrids:
                             join: 'Oro\Bundle\CMSBundle\Entity\ContentWidgetUsage'
                             alias: contentWidgetUsage
                             conditionType: WITH
-                            condition: "contentWidgetUsage.contentWidget = :content_widget_id AND contentWidgetUsage.entityClass = '%oro_cms.entity.page.class%' AND contentWidgetUsage.entityId = page.id"
+                            condition: 'contentWidgetUsage.contentWidget = :content_widget_id AND contentWidgetUsage.entityClass = ''Oro\Bundle\CMSBundle\Entity\Page'' AND contentWidgetUsage.entityId = page.id'
             bind_parameters:
                 - content_widget_id
 
@@ -336,7 +336,7 @@ datagrids:
                             join: 'Oro\Bundle\CMSBundle\Entity\ContentWidgetUsage'
                             alias: contentWidgetUsage
                             conditionType: WITH
-                            condition: "contentWidgetUsage.contentWidget = :content_widget_id AND contentWidgetUsage.entityClass = 'Oro\\Bundle\\CMSBundle\\Entity\\TextContentVariant' AND contentWidgetUsage.entityId = contentVariant.id"
+                            condition: 'contentWidgetUsage.contentWidget = :content_widget_id AND contentWidgetUsage.entityClass = ''Oro\Bundle\CMSBundle\Entity\TextContentVariant'' AND contentWidgetUsage.entityId = contentVariant.id'
                 groupBy: contentBlock.id
             bind_parameters:
                 - content_widget_id
@@ -355,3 +355,60 @@ datagrids:
                     enabled: false
                 updatedAt:
                     enabled: false
+
+    cms-page-drafts-grid:
+        extends: cms-page-grid
+        source:
+            query:
+                select:
+                    - page.createdAt
+                    - page.updatedAt
+                    - CONCAT(draftOwner.firstName, ' ', draftOwner.lastName) as ownerName
+                join:
+                    left:
+                        - { join: page.draftOwner, alias: draftOwner }
+                where:
+                    and:
+                        - page.draftSource = :draft_source_id
+                        - page.draftUuid IS NOT NULL
+            bind_parameters:
+                - draft_source_id
+        options:
+            entityHint: oro.cms.page.draft.entity_plural_label
+            showDrafts: true
+        columns:
+            slug:
+                label: oro.cms.page.slugs.singular_label
+            ownerName:
+                label:         oro.cms.page.draft.owner.label
+            createdAt:
+                label:         oro.ui.created_at
+                frontend_type: datetime
+            updatedAt:
+                label:         oro.ui.updated_at
+                frontend_type: datetime
+        properties:
+            slug:
+                type: localized_value
+                data_name: slugPrototypes
+        sorters:
+            columns:
+                createdAt:
+                    data_name: page.createdAt
+                updatedAt:
+                    data_name: page.updatedAt
+                slug:
+                    data_name: slug
+            default:
+                id: ASC
+        filters:
+            columns:
+                slug:
+                    type: string
+                    data_name: slug
+                createdAt:
+                    type: datetime
+                    data_name: page.createdAt
+                updatedAt:
+                    type: datetime
+                    data_name: page.updatedAt

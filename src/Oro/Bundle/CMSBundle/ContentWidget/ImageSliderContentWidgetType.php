@@ -2,6 +2,8 @@
 
 namespace Oro\Bundle\CMSBundle\ContentWidget;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Oro\Bundle\CMSBundle\Entity\ContentWidget;
 use Oro\Bundle\CMSBundle\Entity\ImageSlide;
@@ -27,6 +29,9 @@ class ImageSliderContentWidgetType implements ContentWidgetTypeInterface
 
     /** @var int */
     private $pointer = 0;
+
+    /** @var array */
+    private $widgetData = [];
 
     /**
      * @param ManagerRegistry $registry
@@ -207,24 +212,55 @@ class ImageSliderContentWidgetType implements ContentWidgetTypeInterface
      */
     public function getWidgetData(ContentWidget $contentWidget): array
     {
-        return array_merge(
-            $contentWidget->getSettings(),
-            [
-                'pageComponentName' => $contentWidget->getName() . ($this->pointer++ ?: ''),
+        $key = spl_object_hash($contentWidget);
+
+        if (!isset($this->widgetData[$key])) {
+            $this->widgetData[$key] = [
+                'pageComponentOptions' => $this->getPageComponentOptions($contentWidget->getSettings()),
                 'imageSlides' => $this->getImageSlides($contentWidget)
-            ]
+            ];
+        }
+
+        return [
+            'pageComponentName' => $contentWidget->getName() . ($this->pointer++ ?: ''),
+            'pageComponentOptions' => $this->widgetData[$key]['pageComponentOptions'],
+            'imageSlides' => $this->widgetData[$key]['imageSlides'],
+        ];
+    }
+
+    /**
+     * @param array $settings
+     * @return Collection
+     */
+    private function getPageComponentOptions(array $settings): Collection
+    {
+        // replace default settings by settings which configured in the UI for the content widget
+        return new ArrayCollection(
+            array_merge(
+                [
+                    'slidesToShow' => 1,
+                    'slidesToScroll' => 1,
+                    'autoplay' => true,
+                    'autoplaySpeed' => 4000,
+                    'arrows' => false,
+                    'dots' => true,
+                    'infinite' => false,
+                ],
+                $settings
+            )
         );
     }
 
     /**
      * @param ContentWidget $contentWidget
-     * @return array
+     * @return Collection
      */
-    private function getImageSlides(ContentWidget $contentWidget): array
+    private function getImageSlides(ContentWidget $contentWidget): Collection
     {
-        return $this->registry->getManagerForClass(ImageSlide::class)
-            ->getRepository(ImageSlide::class)
-            ->findBy(['contentWidget' => $contentWidget], ['slideOrder' => 'ASC']);
+        $repository = $this->registry->getManagerForClass(ImageSlide::class)
+            ->getRepository(ImageSlide::class);
+
+        return new ArrayCollection($repository->findBy(['contentWidget' => $contentWidget], ['slideOrder' => 'ASC']));
     }
 
     /**
@@ -240,6 +276,6 @@ class ImageSliderContentWidgetType implements ContentWidgetTypeInterface
      */
     public function getDefaultTemplate(ContentWidget $contentWidget, Environment $twig): string
     {
-        return $twig->render('@OroCMS/ImageSliderContentWidget/widget.html.twig', $this->getWidgetData($contentWidget));
+        return '';
     }
 }

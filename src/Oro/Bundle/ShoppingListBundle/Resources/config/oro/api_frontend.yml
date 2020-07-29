@@ -1,13 +1,17 @@
+
 api:
+    
+
     entity_aliases:
         Oro\Bundle\ShoppingListBundle\Entity\LineItem:
             alias: shoppinglistitem
             plural_alias: shoppinglistitems
-
+        
     entities:
         Oro\Bundle\ShoppingListBundle\Entity\ShoppingList:
             documentation_resource: '@OroShoppingListBundle/Resources/doc/api_frontend/shopping_list.md'
             fields:
+                skip_acl_for_root_entity: true
                 name:
                     property_path: label
                 default:
@@ -24,6 +28,9 @@ api:
                     data_type: money
                     form_options:
                         mapped: false
+                organization:
+                    form_options:
+                        mapped: true
                 subTotal:
                     data_type: money
                     # set "ignore" (_) property path to avoid collisions with ShoppingList::getSubtotal()
@@ -62,6 +69,7 @@ api:
                 customer:
                     actions:
                         update_relationship: false
+               
                 customerUser:
                     actions:
                         update_relationship: false

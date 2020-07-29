@@ -82,6 +82,8 @@ api:
         Oro\Bundle\CatalogBundle\Entity\Category:
             documentation_resource: '@OroCatalogBundle/Resources/doc/api_frontend/category.md'
             fields:
+                skip_acl_for_root_entity: true
+                
                 denormalizedDefaultTitle:
                     exclude: true
                 materializedPath:
@@ -100,8 +102,10 @@ api:
                     exclude: true
                 childCategories:
                     exclude: true
+                
                 title:
-                    data_type: localizedFallbackValue:titles
+                    property_path: denormalizedDefaultTitle
+                    # data_type: localizedFallbackValue:titles
                 shortDescription:
                     data_type: localizedFallbackValue:shortDescriptions
                 description:
@@ -143,8 +147,8 @@ api:
                     property_path: materializedPath
                     exclude: true
             actions:
-                create: false
-                update: false
+                create: true
+                update: true
                 delete: false
                 delete_list: false
             subresources:
@@ -164,6 +168,13 @@ api:
             documentation_resource: '@OroCatalogBundle/Resources/doc/api_frontend/product.md'
             fields:
                 category: ~
+            filters:
+                fields:
+                    rootCategory:
+                        data_type: integer
+                        type: nestedTree
+                        options:
+                            field: category
 
         Oro\Bundle\ProductBundle\Api\Model\ProductSearch:
             documentation_resource: '@OroCatalogBundle/Resources/doc/api_frontend/product_search.md'

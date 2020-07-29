@@ -21,6 +21,11 @@ api:
 
         Oro\Bundle\ProductBundle\Entity\ProductImage:
             documentation_resource: '@OroProductBundle/Resources/doc/api/product_image.md'
+            # fields:
+            #     image:
+            #         field:
+            #             id:
+            #             content: ~
 
         Oro\Bundle\ProductBundle\Entity\ProductImageType:
             documentation_resource: '@OroProductBundle/Resources/doc/api/product_image_type.md'
@@ -41,9 +46,24 @@ api:
                 parentVariantLinks:
                     exclude: true
                 denormalizedDefaultName:
-                    exclude: true
+                    exclude: false
                 denormalizedDefaultNameUppercase:
                     exclude: true
+                names:
+                    fields:
+                        id: ~
+                        string: ~
+                        text: ~
+                shortDescriptions:
+                    fields:
+                        id: ~
+                        string: ~
+                        text: ~
+                descriptions:
+                    fields:
+                        id: ~
+                        string: ~
+                        text: ~
             filters:
                 fields:
                     sku:

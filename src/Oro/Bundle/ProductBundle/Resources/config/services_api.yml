@@ -37,6 +37,59 @@ services:
         tags:
             - { name: oro.api.documentation_provider, requestType: frontend_sku, priority: 250 }
 
+    oro_product.api.resource_type_resolver.product:
+        class: Oro\Bundle\FrontendBundle\Api\ResourceTypeResolver
+        arguments:
+            - 'product'
+        tags:
+            - { name: oro_frontend.api.resource_type_resolver, routeName: oro_product_frontend_product_view }
+
+    oro_product.api.resource_api_url_resolver.product:
+        class: Oro\Bundle\FrontendBundle\Api\ResourceRestApiGetActionUrlResolver
+        arguments:
+            - '@router'
+            - '@oro_api.rest.routes_registry'
+            - '@oro_api.value_normalizer'
+            - Oro\Bundle\ProductBundle\Entity\Product
+        tags:
+            - { name: oro_frontend.api.resource_api_url_resolver, routeName: oro_product_frontend_product_view, requestType: rest }
+
+    oro_product.api.resource_type_resolver.product_collection:
+        class: Oro\Bundle\FrontendBundle\Api\ResourceTypeResolver
+        arguments:
+            - 'product_collection'
+            - ['contentVariantId']
+        tags:
+            - { name: oro_frontend.api.resource_type_resolver, routeName: oro_product_frontend_product_index }
+
+    oro_product.api.resource_api_url_resolver.product_collection:
+        class: Oro\Bundle\ProductBundle\Api\ProductCollectionRestResourceApiUrlResolver
+        arguments:
+            - '@router'
+            - '@oro_api.rest.routes_registry'
+            - '@oro_api.value_normalizer'
+        tags:
+            - { name: oro_frontend.api.resource_api_url_resolver, routeName: oro_product_frontend_product_index, requestType: rest }
+
+    oro_product.api.resource_type_resolver.all_products_collection:
+        class: Oro\Bundle\FrontendBundle\Api\ResourceTypeResolver
+        arguments:
+            - 'products'
+        tags:
+            - { name: oro_frontend.api.resource_type_resolver, routeName: oro_product_frontend_product_index, priority: -100 }
+            - { name: oro_frontend.api.resource_type_resolver, routeName: oro_catalog_frontend_product_allproducts, priority: -100 }
+
+    oro_product.api.resource_api_url_resolver.all_products_collection:
+        class: Oro\Bundle\FrontendBundle\Api\ResourceRestApiGetListActionUrlResolver
+        arguments:
+            - '@router'
+            - '@oro_api.rest.routes_registry'
+            - '@oro_api.value_normalizer'
+            - Oro\Bundle\ProductBundle\Entity\Product
+        tags:
+            - { name: oro_frontend.api.resource_api_url_resolver, routeName: oro_product_frontend_product_index, requestType: rest, priority: -100 }
+            - { name: oro_frontend.api.resource_api_url_resolver, routeName: oro_catalog_frontend_product_allproducts, requestType: rest, priority: -100 }
+
     oro_product.api.check_request_type.frontend_sku:
         class: Oro\Bundle\ProductBundle\Api\Processor\CheckFrontendSkuRequestType
         tags:
@@ -85,8 +138,9 @@ services:
         arguments:
             - '@oro_attachment.manager'
             - '@oro_layout.provider.image_type'
+            - '@oro_attachment.file_manager'
         tags:
-            - { name: oro.api.processor, action: customize_loaded_data, requestType: frontend, collection: true, class: Oro\Bundle\ProductBundle\Entity\ProductImage }
+            - { name: oro.api.processor, action: customize_loaded_data, requestType: rest, collection: true, class: Oro\Bundle\ProductBundle\Entity\ProductImage }
 
     oro_product.api.handle_variants_filter:
         class: Oro\Bundle\ProductBundle\Api\Processor\HandleVariantsFilter
@@ -106,6 +160,7 @@ services:
             - '@oro_api.doctrine_helper'
             - '@oro_locale.helper.localization'
             - '@oro_config.manager'
+            - '@router'
         tags:
             - { name: oro.api.processor, action: customize_loaded_data, requestType: frontend, collection: true, class: Oro\Bundle\ProductBundle\Entity\Product }
 
@@ -191,8 +246,8 @@ services:
         arguments:
             - '@oro_api.entity_serializer.query_modifier_registry'
         tags:
-            - { name: oro.api.processor, action: get, group: build_query, requestType: frontend, class: Oro\Bundle\ProductBundle\Entity\ProductImage, priority: -150 }
-            - { name: oro.api.processor, action: get_list, group: build_query, requestType: frontend, class: Oro\Bundle\ProductBundle\Entity\ProductImage, priority: -150 }
+            - { name: oro.api.processor, action: get, group: build_query, requestType: rest, class: Oro\Bundle\ProductBundle\Entity\ProductImage, priority: -150 }
+            - { name: oro.api.processor, action: get_list, group: build_query, requestType: rest, class: Oro\Bundle\ProductBundle\Entity\ProductImage, priority: -150 }
 
     oro_product.api.product_collection.register_configured_filters:
         class: Oro\Bundle\ApiBundle\Processor\Shared\RegisterConfiguredFilters

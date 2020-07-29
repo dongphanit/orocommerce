@@ -4,8 +4,6 @@
  *
  * Overwrite and reassing html parsing
  */
-import {wrap, find, omit, isString} from 'underscore';
-
 const modelAttrStart = 'data-gjs-';
 const textTags = ['ul', 'ol', 'li'];
 const wrappedTags = ['ul', 'ol'];
@@ -135,6 +133,8 @@ function parseNodes(el, config, ct = '', parent = false) {
                             obj = {type: compType.id};
                         }
                         break;
+                    } else if (obj === 0) {
+                        throw new Error();
                     }
                 }
 
@@ -312,33 +312,6 @@ function parseNodes(el, config, ct = '', parent = false) {
 }
 
 /**
- * Check components default properties
- * @param components
- * @param cTypes
- * @returns {*}
- */
-function componentsCheck(components = [], cTypes) {
-    if (isString(components)) {
-        return components;
-    }
-
-    return components.map(component => {
-        const fType = component.type && find(cTypes, type => type.id === component.type);
-
-        if (component && component.components.length) {
-            component.components = componentsCheck(component.components, cTypes);
-        }
-
-        return fType ? Object.assign(
-            component,
-            omit(fType.model.prototype.defaults,
-                ['components', 'content', 'class', 'style', 'tagName', 'type', 'attributes']
-            )
-        ) : component;
-    });
-}
-
-/**
  * @constructor
  * Content parser initialize
  * @param editor
@@ -347,9 +320,4 @@ function componentsCheck(components = [], cTypes) {
 export default function ContentParser(editor) {
     const cTypes = editor.DomComponents.componentTypes;
     editor.Parser.parseHtml = html => htmlParser(html, editor.getConfig(), cTypes, editor.Parser.parseCss);
-
-    editor.DomComponents.setComponents = wrap(
-        editor.DomComponents.setComponents,
-        (func, components) => func.call(editor.DomComponents, componentsCheck(components, cTypes))
-    );
 }

@@ -1,14 +1,10 @@
-parameters:
-    oro_payment.entity.payment_transaction.class: Oro\Bundle\PaymentBundle\Entity\PaymentTransaction
-    oro_payment.entity.payment_methods_configs_rule.class: Oro\Bundle\PaymentBundle\Entity\PaymentMethodsConfigsRule
-
 services:
     oro_payment.payment_methods_configs_rule.manager.api:
         class: 'Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager'
         public: true
         parent: oro_soap.manager.entity_manager.abstract
         arguments:
-            - '%oro_payment.entity.payment_methods_configs_rule.class%'
+            - 'Oro\Bundle\PaymentBundle\Entity\PaymentMethodsConfigsRule'
             - "@doctrine.orm.entity_manager"
 
     oro_payment.form.handler.payment_methods_configs_rule:
@@ -44,7 +40,6 @@ services:
     oro_payment.extension.action.type.payment_delete:
         class: 'Oro\Bundle\PaymentBundle\Extension\Action\Actions\PaymentDeleteAction'
         shared: false
-        public: true
         tags:
             - { name: oro_datagrid.extension.action.type, type: payment-delete }
 
@@ -98,7 +93,7 @@ services:
             - '@oro_api.doctrine_helper'
             - '@oro_customer.security.customer_user_provider'
             - '@event_dispatcher'
-            - '%oro_payment.entity.payment_transaction.class%'
+            - 'Oro\Bundle\PaymentBundle\Entity\PaymentTransaction'
         calls:
             - ['setLogger', ['@logger']]
 
@@ -220,10 +215,14 @@ services:
     oro_payment.payment_method.composite_provider:
         class: 'Oro\Bundle\PaymentBundle\Method\Provider\CompositePaymentMethodProvider'
         public: true
+        arguments:
+            - !tagged_iterator oro_payment.payment_method_provider
 
     oro_payment.payment_method_view.composite_provider:
         class: 'Oro\Bundle\PaymentBundle\Method\View\CompositePaymentMethodViewProvider'
         public: true
+        arguments:
+            - !tagged_iterator oro_payment.payment_method_view_provider
 
     oro_payment.context.doctrine_line_item_collection_factory:
         class: 'Oro\Bundle\PaymentBundle\Context\LineItem\Collection\Doctrine\Factory\DoctrinePaymentLineItemCollectionFactory'
@@ -286,10 +285,9 @@ services:
 
     oro_payment.context.factory.composite_supports_entity:
         class: 'Oro\Bundle\PaymentBundle\Context\Factory\CompositeSupportsEntityPaymentContextFactory'
-        arguments:
-            - []
         public: false
-        lazy: true
+        arguments:
+            - !tagged_iterator oro_payment.supports_entity_payment_context_factory
 
     oro_payment.context.factory.transaction_payment_context:
         class: 'Oro\Bundle\PaymentBundle\Context\Factory\TransactionPaymentContextFactory'
@@ -334,7 +332,7 @@ services:
         arguments:
             - '@oro_security.token_accessor'
         tags:
-            - { name: doctrine.orm.entity_listener, entity: '%oro_payment.entity.payment_transaction.class%', event: prePersist }
+            - { name: doctrine.orm.entity_listener, entity: 'Oro\Bundle\PaymentBundle\Entity\PaymentTransaction', event: prePersist }
 
     oro_payment.provider.payment_order_line_item_options:
         class: 'Oro\Bundle\PaymentBundle\Provider\PaymentOrderLineItemOptionsProvider'
